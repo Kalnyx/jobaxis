@@ -206,53 +206,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ---- Resume Form Submission (Web3Forms) ----
+    // ---- Resume Form Submission (Formsubmit.co) ----
+    // Formsubmit handles submission via form action redirect.
+    // We just show a loading state on the button before the page navigates.
     const resumeForm = document.getElementById('resumeForm');
     if (resumeForm) {
-        resumeForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        resumeForm.addEventListener('submit', () => {
             const btn = document.getElementById('resumeSubmitBtn');
             const span = btn.querySelector('span');
-            const originalText = span.textContent;
-
-            // Loading state
             span.textContent = 'Submitting...';
             btn.disabled = true;
-
-            try {
-                const formData = new FormData(resumeForm);
-                const response = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    span.textContent = 'Resume Submitted!';
-                    btn.style.background = '#222';
-
-                    setTimeout(() => {
-                        span.textContent = originalText;
-                        btn.style.background = '';
-                        btn.disabled = false;
-                        resumeForm.reset();
-                        // Reset file UI
-                        if (fileSelected) fileSelected.style.display = 'none';
-                        if (uploadContent) uploadContent.style.display = '';
-                    }, 3000);
-                } else {
-                    throw new Error(result.message || 'Submission failed');
-                }
-            } catch (err) {
-                span.textContent = 'Error — Try Again';
-                btn.disabled = false;
-
-                setTimeout(() => {
-                    span.textContent = originalText;
-                    btn.style.background = '';
-                }, 3000);
-            }
         });
     }
 
